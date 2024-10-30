@@ -8,9 +8,12 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(os.getcwd(), "test.db")}'
 db = SQLAlchemy(app)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
+def setup_database():
+    with app.app_context():
+        db.create_all()
+
+# Call setup_database to create tables before the first request
+setup_database()
 
 class Todo(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
